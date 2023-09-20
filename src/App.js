@@ -1,11 +1,16 @@
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import Dummy from "./Components/Dummy/Dummy";
 
-import './App.css';
-import SignupForm from './Components/SignupLogin/SignupForm';
+import SignupLogin from "./Components/SignupLogin/SignupLogin";
 
 function App() {
   return (
     <div className="App">
-      <SignupForm />
+      <Routes>
+        <Route path="/" element={<SignupLogin />} />
+        <Route path="/dummy" element={<Dummy />} />
+      </Routes>
     </div>
   );
 }

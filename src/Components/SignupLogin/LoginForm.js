@@ -1,26 +1,21 @@
 import React, { useRef } from "react";
 import { Button, Form } from "react-bootstrap";
-import classes from "./SignupForm.module.css";
+import { useNavigate } from "react-router-dom";
+import classes from "./LoginForm.module.css";
 
-const SignupForm = (props) => {
-  const formRef = useRef();
+const LoginForm = (props) => {
   const emailInputRef = useRef();
   const passInputRef = useRef();
-  const conPassInputRef = useRef();
+  const navigate = useNavigate();
 
-  const submitHandler = async (event) => {
+  const submitLoginHandle = async (event) => {
     event.preventDefault();
-
     const enteredEmail = emailInputRef.current.value;
     const enteredPass = passInputRef.current.value;
-    const enteredConPass = conPassInputRef.current.value;
 
-    if (enteredPass !== enteredConPass) {
-      alert("Password not matched with Confirm password.");
-    }
     try {
       const res = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
         {
           method: "POST",
           body: JSON.stringify({
@@ -33,23 +28,21 @@ const SignupForm = (props) => {
           },
         }
       );
-      console.log("Successfully signed up");
-      alert("Successfully signed up");
+      navigate("/dummy", { replace: true });
+      console.log("successfullyLogged in");
       if (!res.ok) {
         throw Error("Authentication Failed");
       }
-      formRef.current.reset();
     } catch (error) {
       alert(error);
     }
   };
 
   return (
-    <div className={classes.signup}>
-      <h1>Sign Up</h1>
-      <Form ref={formRef}>
+    <div className={classes.login}>
+      <h1>Log In</h1>
+      <Form>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter email"
@@ -57,9 +50,7 @@ const SignupForm = (props) => {
             required
           />
         </Form.Group>
-
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Password"
@@ -67,21 +58,12 @@ const SignupForm = (props) => {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Confirm Password"
-            ref={conPassInputRef}
-            required
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit" onClick={submitHandler}>
-          Sign up
+        <Button variant="primary" type="submit" onClick={submitLoginHandle}>
+          Log in
         </Button>
       </Form>
     </div>
   );
 };
 
-export default SignupForm;
+export default LoginForm;
