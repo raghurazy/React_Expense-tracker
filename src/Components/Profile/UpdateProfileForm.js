@@ -1,12 +1,22 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button, Form } from "react-bootstrap";
 import classes from "./UpdateProfileForm.module.css";
 
 const UpdateProfileForm = (props) => {
   const formRef = useRef();
-  const nameInputRef = useRef();
+  let emailInputRef = useRef();
+  let nameInputRef = useRef();
   const contactInputRef = useRef();
   const locationInputRef = useRef();
+  console.log(props.user)
+  useEffect(()=> {
+    if (props.user) {
+        nameInputRef.current.value = props.user.displayName;
+        emailInputRef.current.value = props.user.email;
+      }
+  },[props.user])
+//   nameInputRef = props.user.displayName;
+
 
   const clickUpdateHandler = async (event) => {
       event.preventDefault();
@@ -48,6 +58,10 @@ const UpdateProfileForm = (props) => {
     <section className={classes.updateForm}>
       <h1>Update profile</h1>
       <Form ref={formRef}>
+      <Form.Group className={classes["mb-3"]}>
+          <Form.Label className={classes.label}>Email</Form.Label>
+          <Form.Control placeholder="Email" ref={emailInputRef} />
+        </Form.Group>
         <Form.Group className={classes["mb-3"]}>
           <Form.Label className={classes.label}>Full Name:</Form.Label>
           <Form.Control placeholder="Full Name" ref={nameInputRef} />
@@ -69,3 +83,4 @@ const UpdateProfileForm = (props) => {
 };
 
 export default UpdateProfileForm;
+              

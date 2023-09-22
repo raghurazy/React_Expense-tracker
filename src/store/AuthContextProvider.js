@@ -17,6 +17,7 @@ const AuthContextProvider = (props) => {
     setToken(tokenId);
     setUserEmail(email);
     localStorage.setItem('user', tokenId);
+
   };
 
   const logoutHandler = () => {
