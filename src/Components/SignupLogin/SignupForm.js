@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import classes from "./SignupForm.module.css";
 
@@ -8,8 +8,12 @@ const SignupForm = (props) => {
   const passInputRef = useRef();
   const conPassInputRef = useRef();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [varifyMail, setVarifymail] = useState(false);
+
   const submitHandler = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
 
     const enteredEmail = emailInputRef.current.value;
     const enteredPass = passInputRef.current.value;
@@ -33,15 +37,45 @@ const SignupForm = (props) => {
           },
         }
       );
-      console.log("Successfully signed up");
-      alert("Successfully signed up");
-      if (!res.ok) {
+      const data = await res.json();
+      //   console.log("Successfully signed up");
+      //   alert("Click Ok for email verification.");
+      if (res.ok) {
+        try {
+          const response = await fetch(
+            "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                requestType: "VERIFY_EMAIL",
+                idToken: data.idToken,
+              }),
+              headers: {
+                "content-type": "application/json",
+              },
+            }
+          );
+          if(response.ok){
+            setIsLoading(false);
+            alert("Verification email sent.");
+            setVarifymail(true);
+            setTimeout(() => {
+                setVarifymail(false)
+            },10000)
+          } else {
+              throw new Error ('Sign Up failed. Try again.')
+          }
+        } catch (error) {
+          alert(error)
+        }
+      } else {
         throw Error("Authentication Failed");
       }
-      formRef.current.reset();
     } catch (error) {
       alert(error);
+      setIsLoading(false);
     }
+    formRef.current.reset();
   };
 
   return (
@@ -77,8 +111,13 @@ const SignupForm = (props) => {
           />
         </Form.Group>
         <Button variant="primary" type="submit" onClick={submitHandler}>
-          Sign up
+          {!isLoading ? 'Sign up' : 'Sending request...'}
         </Button>
+        {varifyMail && (
+          <p style={{ margin: "1rem", color: "green" }}>
+            Please varify email. Verfication mail already sent.
+          </p>
+        )}
       </Form>
     </div>
   );
