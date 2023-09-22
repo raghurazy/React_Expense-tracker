@@ -1,18 +1,20 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../../store/auth-context";
 import classes from "./LoginForm.module.css";
 
 const LoginForm = (props) => {
   const emailInputRef = useRef();
   const passInputRef = useRef();
   const navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
 
   const submitLoginHandle = async (event) => {
     event.preventDefault();
     const enteredEmail = emailInputRef.current.value;
     const enteredPass = passInputRef.current.value;
-
+    
     try {
       const res = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
@@ -28,9 +30,14 @@ const LoginForm = (props) => {
           },
         }
       );
-      navigate("/dummy", { replace: true });
-      console.log("successfullyLogged in");
-      if (!res.ok) {
+      const data = await res.json();
+      
+      if (res.ok) {
+        navigate("/profile", { replace: true });
+        authCtx.login(data.idToken, data.email)
+        console.log("successfullyLogged in");
+        
+      }else {
         throw Error("Authentication Failed");
       }
     } catch (error) {
