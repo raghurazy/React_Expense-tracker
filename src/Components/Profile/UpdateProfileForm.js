@@ -25,8 +25,6 @@ const UpdateProfileForm = (props) => {
     const enteredName = nameInputRef.current.value;
     const enteredContact = contactInputRef.current.value;
     const enteredLocation = locationInputRef.current.value;
-
-
     try {
       const res = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
@@ -85,3 +83,4 @@ const UpdateProfileForm = (props) => {
 };
 
 export default UpdateProfileForm;
+          
