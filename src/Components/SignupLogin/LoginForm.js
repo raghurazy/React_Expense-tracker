@@ -35,7 +35,7 @@ const LoginForm = (props) => {
       const data = await res.json();
 
       if (res.ok) {
-        navigate("/profile", { replace: true });
+        navigate("/profile/expense-tracker", { replace: true });
         authCtx.login(data.idToken, data.email);
         console.log("successfullyLogged in");
       } else {

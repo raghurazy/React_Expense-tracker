@@ -20,7 +20,7 @@ const UpdateProfileForm = (props) => {
 //   nameInputRef = props.user.displayName;
 
 
-  const clickUpdateHandler = async (event) => {
+    const clickUpdateHandler = async (event) => {
       event.preventDefault();
     const enteredName = nameInputRef.current.value;
     const enteredContact = contactInputRef.current.value;
@@ -29,7 +29,7 @@ const UpdateProfileForm = (props) => {
 
     try {
       const res = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
+        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
         {
           method: "POST",
           body: JSON.stringify({

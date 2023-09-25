@@ -1,8 +1,6 @@
 .proCon {
   padding: 0.5rem;
   border-bottom: 2px solid black;
-  
-  
 }
 
 .proCon p {
@@ -33,3 +31,27 @@ display: flex;
   border-radius: 15px;
   padding: 0.25rem;
 }
+
+@media (max-width: 768px) {
+    .proCon {
+      width: 100%;
+    }
+  
+    .headerDetail span {
+      margin-left: 0;
+    }
+  
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
