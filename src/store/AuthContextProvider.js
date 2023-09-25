@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "./auth-context";
 
 
@@ -6,10 +6,16 @@ const AuthContextProvider = (props) => {
   const [token, setToken] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
 
-  if (token == null && localStorage.length !== 0) {
-    setToken(localStorage["user"]);
-    // setUserEmail(localStorage['userEmail'])
+  const onRefresh = () => {
+    if (token == null && localStorage.length !== 0) {
+      setToken(localStorage["user"]);
+      setUserEmail(localStorage['userEmail'])
+    }
   }
+  
+  useEffect(() => {
+    onRefresh();
+  }, [])
 
   const userLoggedIn = !!token;
 
@@ -17,13 +23,14 @@ const AuthContextProvider = (props) => {
     setToken(tokenId);
     setUserEmail(email);
     localStorage.setItem('user', tokenId);
+    localStorage.setItem('userEmail', email);
 
   };
-
   const logoutHandler = () => {
     setToken(null);
     setUserEmail(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('userEmail');
   };
   
 

@@ -1,5 +1,8 @@
+import axios from "axios";
 import React, { useContext, useRef } from "react";
 import { Button } from "react-bootstrap";
+import { json } from "react-router-dom";
+import AuthContext from "../../store/auth-context";
 import ExpenseContext from "../../store/expense-context";
 
 import classes from "./ExpenseForm.module.css";
@@ -10,8 +13,9 @@ const ExpenseForm = () => {
     const cateRef = useRef();
 
     const expCtx = useContext(ExpenseContext);
-    console.log(expCtx);
-    const clickAddHandler = (e) => {
+    const authCtx = useContext(AuthContext);
+    console.log(authCtx.userEmail);
+    const clickAddHandler = async e => {
         e.preventDefault();
         const expDetail = {
             enteredAmt: amtInputRef.current.value,
@@ -21,7 +25,14 @@ const ExpenseForm = () => {
         };
         
         console.log(expDetail);
+        const email=authCtx.userEmail.replace(/[\.@]/g, "")
+        try {
+          const res = await axios.post(`https://expense-tracker-ac87d-default-rtdb.firebaseio.com/${email}/expenses.json`,expDetail)
+        } catch (error) {
+          alert(error)
+        }
         expCtx.addItem(expDetail);
+        
     }
 
   return (
