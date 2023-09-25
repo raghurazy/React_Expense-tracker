@@ -1,23 +1,35 @@
 .proCon {
-    padding: 0.5rem;
-    
-  }
+  padding: 0.5rem;
+  border-bottom: 2px solid black;
   
-  .proCon p {
-    align-items: flex-start;
-  }
   
-  .header {
-      border-bottom: 2px solid black;
+}
+
+.proCon p {
+  align-items: flex-start;
+}
+.headerDetail {
+display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between !important;
+}
+.headerDetail span {
+    margin-left: 55rem;
+}
+.header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-style: italic;
-  }
-  
-  .incomplete {
-    font-style: italic;
-    background-color: rgba(214, 119, 63, 0.4);
-    border-radius: 15px;
-    padding: 0.25rem;
-  }
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-style: italic;
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
+
+.incomplete {
+  font-style: italic;
+  background-color: rgba(214, 119, 63, 0.4);
+  border-radius: 15px;
+  padding: 0.25rem;
+}

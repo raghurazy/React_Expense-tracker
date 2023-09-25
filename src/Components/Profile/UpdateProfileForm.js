@@ -11,7 +11,9 @@ const UpdateProfileForm = (props) => {
   console.log(props.user)
   useEffect(()=> {
     if (props.user) {
-        nameInputRef.current.value = props.user.displayName;
+        if(props.user.displayName !== undefined){
+            nameInputRef.current.value = props.user.displayName;
+        }
         emailInputRef.current.value = props.user.email;
       }
   },[props.user])
@@ -83,4 +85,3 @@ const UpdateProfileForm = (props) => {
 };
 
 export default UpdateProfileForm;
-              

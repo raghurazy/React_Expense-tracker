@@ -1,7 +1,8 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
+import ForgotPassForm from "./ForgotPassForm";
 import classes from "./LoginForm.module.css";
 
 const LoginForm = (props) => {
@@ -9,12 +10,13 @@ const LoginForm = (props) => {
   const passInputRef = useRef();
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
+  const [forgotVisible, setForgotVisible] = useState(false);
 
   const submitLoginHandle = async (event) => {
     event.preventDefault();
     const enteredEmail = emailInputRef.current.value;
     const enteredPass = passInputRef.current.value;
-    
+
     try {
       const res = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
@@ -31,13 +33,12 @@ const LoginForm = (props) => {
         }
       );
       const data = await res.json();
-      
+
       if (res.ok) {
         navigate("/profile", { replace: true });
-        authCtx.login(data.idToken, data.email)
+        authCtx.login(data.idToken, data.email);
         console.log("successfullyLogged in");
-        
-      }else {
+      } else {
         throw Error("Authentication Failed");
       }
     } catch (error) {
@@ -45,31 +46,44 @@ const LoginForm = (props) => {
     }
   };
 
+  const linkClickHandler = () => {
+    setForgotVisible(true);
+  };
+
   return (
-    <div className={classes.login}>
-      <h1>Log In</h1>
-      <Form>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
-            ref={emailInputRef}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Control
-            type="password"
-            placeholder="Password"
-            ref={passInputRef}
-            required
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit" onClick={submitLoginHandle}>
-          Log in
-        </Button>
-      </Form>
-    </div>
+    <>
+      {forgotVisible ? (
+        <ForgotPassForm onReset={() => setForgotVisible(false)} />
+      ) : (
+        <div className={classes.login}>
+          <h1>Log In</h1>
+          <Form>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                ref={emailInputRef}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                ref={passInputRef}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Link onClick={linkClickHandler}>Forgot Password?</Link>
+            </Form.Group>
+            <Button variant="primary" type="submit" onClick={submitLoginHandle}>
+              Log in
+            </Button>
+          </Form>
+        </div>
+      )}
+    </>
   );
 };
 
