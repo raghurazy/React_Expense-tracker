@@ -7,7 +7,7 @@
   align-items: flex-start;
 }
 .headerDetail {
-display: flex;
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between !important;
@@ -30,7 +30,25 @@ display: flex;
   background-color: rgba(214, 119, 63, 0.4);
   border-radius: 15px;
   padding: 0.25rem;
+  margin-left: 15rem;
 }
+
+.incomplete button {
+  background: none;
+  border: none;
+  color: blue;
+  padding: 0;
+  border-bottom: 1px solid blue;
+}
+
+.expenseBtn {
+  margin-left: 30rem;
+}
+
+/* .headerDetail p {
+  margin-right: 100px;
+} */
+
 
 @media (max-width: 768px) {
     .proCon {

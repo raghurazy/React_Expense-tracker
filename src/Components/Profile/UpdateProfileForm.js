@@ -8,26 +8,25 @@ const UpdateProfileForm = (props) => {
   let nameInputRef = useRef();
   const contactInputRef = useRef();
   const locationInputRef = useRef();
-  console.log(props.user)
+  // console.log(props.user)
   useEffect(()=> {
     if (props.user) {
-        if(props.user.displayName !== undefined){
+        if(props.user.displayName){
             nameInputRef.current.value = props.user.displayName;
         }
         emailInputRef.current.value = props.user.email;
       }
   },[props.user])
-//   nameInputRef = props.user.displayName;
-
+  // nameInputRef = props.user.displayName;
 
     const clickUpdateHandler = async (event) => {
-      event.preventDefault();
+    event.preventDefault();
     const enteredName = nameInputRef.current.value;
     const enteredContact = contactInputRef.current.value;
     const enteredLocation = locationInputRef.current.value;
     try {
       const res = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
+        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAZobg4eyNJoipHhkpdx2cBTzNXFEEDHN8",
         {
           method: "POST",
           body: JSON.stringify({
@@ -45,6 +44,10 @@ const UpdateProfileForm = (props) => {
       const upData = await res.json();
       if (res.ok) {
         alert("Profile Updated");
+        props.update()
+        nameInputRef.current.value = props.user.displayName;
+        emailInputRef.current.value = props.user.email;
+
       } else {
         throw new Error("Upadation failed!. Please try again.");
       }
@@ -83,4 +86,3 @@ const UpdateProfileForm = (props) => {
 };
 
 export default UpdateProfileForm;
-          

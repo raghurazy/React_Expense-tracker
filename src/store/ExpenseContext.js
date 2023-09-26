@@ -3,40 +3,38 @@ import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "./auth-context";
 import ExpenseContext from "./expense-context";
 
-const ExpenseProvider = props => {
+const ExpenseProvider = (props) => {
   const [itemsArr, setItemsArr] = useState([]);
   const [editItems, updateEditItems] = useState(null);
   const authCtx = useContext(AuthContext);
 
-  useEffect(() => {
-    if(localStorage.length == 0){
-      setItemsArr([]);
-    }
-  }, [localStorage.length])
+  // useEffect(() => {
+  //   setItemsArr([]);
+  // }, [authCtx.userEmail]);
 
-  const restoreItems = async () => {
-    const email = localStorage['userEmail'].replace(/[\.@]/g, "");
-    try {
-      const res = await axios.get(`https://expense-tracker-ac87d-default-rtdb.firebaseio.com/${email}/expenses.json`)
+  // const restoreItems = async () => {
+  //   const email = authCtx.userEmail.replace(/[\.@]/g, "");
+  //   try {
+  //     const res = await axios.get(
+  //       `https://myreact-expense-tracker-default-rtdb.firebaseio.com/${email}/expenses.json`
+  //     );
 
-      const data = res.data;
-      if(data){
-        const realData = Object.values(data).reverse();
-        // console.log(realData)
-          setItemsArr(realData);
-      }
-      
-      
-    } catch(error){
-      alert(error)
-    }
-  };
-  
-  useEffect(() => {
-    if(localStorage.length>0){
-      restoreItems();
-    }
-  },[localStorage.length]);
+  //     const data = res.data;
+  //     if (data) {
+  //       const realData = Object.values(data).reverse();
+  //       console.log(realData)
+  //       setItemsArr(realData);
+  //     }
+  //   } catch (error) {
+  //     alert(error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if(authCtx.userEmail!==null){
+  //     restoreItems();
+  //   }
+  // }, [authCtx.userEmail]);
 
   const addItemHandler = (item) => {
     setItemsArr([item, ...itemsArr]);
@@ -44,29 +42,31 @@ const ExpenseProvider = props => {
 
   const editItemHandler = (item, filtered) => {
     updateEditItems(item);
-    setItemsArr(filtered)
-  }
+    setItemsArr(filtered);
+  };
 
   const removeItemHandler = async (item) => {
-    const filtered = itemsArr.filter((ele) => ele !==item)
-    setItemsArr([...filtered])
-    const email = localStorage['userEmail'].replace(/[\.@]/g, "");
+    const filtered = itemsArr.filter((ele) => ele !== item);
+    setItemsArr([...filtered]);
+    const email = authCtx.userEmail.replace(/[\.@]/g, "");
     try {
-      const res = await axios.get(`https://expense-tracker-ac87d-default-rtdb.firebaseio.com/${email}/expenses.json`)
+      const res = await axios.get(
+        `https://expense-tracker-ac87d-default-rtdb.firebaseio.com/${email}/expenses.json`
+      );
 
       const data = res.data;
       // console.log(data);
       const itemId = Object.keys(data).find((id) => data[id].id === item.id);
       try {
-        const res = await axios.delete(`https://expense-tracker-ac87d-default-rtdb.firebaseio.com/${email}/expenses/${itemId}.json`)
-      } catch(error) {
+        const res = await axios.delete(
+          `https://expense-tracker-ac87d-default-rtdb.firebaseio.com/${email}/expenses/${itemId}.json`
+        );
+      } catch (error) {
         alert(error);
       }
-    } catch(error) {
+    } catch (error) {
       alert(error);
     }
-      
-    
   };
 
   const expenseContext = {
@@ -75,7 +75,7 @@ const ExpenseProvider = props => {
     addItem: addItemHandler,
     removeItem: removeItemHandler,
     editItem: editItemHandler,
-    onLogin: restoreItems
+    // onLogin: restoreItems,
   };
 
   return (
@@ -86,6 +86,7 @@ const ExpenseProvider = props => {
 };
 
 export default ExpenseProvider;
+
 
 
 
