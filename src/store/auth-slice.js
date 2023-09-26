@@ -4,6 +4,7 @@ const initialAuthState = {
   token: localStorage.getItem('user'),
 //   isLoggedIn: userLoggedIn,
   userEmail: localStorage.getItem('userEmail'),
+  isPremium: localStorage.getItem('isPremium')
 };
 
 // const userLoggedIn = !!initialAuthState.token;
@@ -24,7 +25,13 @@ const authSlice = createSlice({
       state.userEmail = null;
       localStorage.removeItem("user");
       localStorage.removeItem("userEmail");
+      state.isPremium = false;
+      localStorage.removeItem('isPremium');
+    localStorage.removeItem('isDark');
     },
+    setIsPremium(state) {
+        state.isPremium = true;
+    }
   },
 });
 

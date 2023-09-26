@@ -1,9 +1,8 @@
 import axios from "axios";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import AuthContext from "../../store/auth-context";
-import ExpenseContext from "../../store/expense-context";
+import AuthContext from "../../store/context/auth-context";
 import { expenseActions } from "../../store/expense-slice";
 
 import classes from "./ExpenseForm.module.css";
@@ -19,7 +18,7 @@ const ExpenseForm = () => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const expense = useSelector((state) => state.expenseStore);
-  console.log(expense.editItems);
+ 
   useEffect(() => {
     if (expense.editItems !== null) {
       amtInputRef.current.value = expense.editItems.enteredAmt;
@@ -95,7 +94,3 @@ const ExpenseForm = () => {
 };
 
 export default ExpenseForm;
-          
-
-
-         

@@ -2,24 +2,27 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import AuthContext from "../../store/auth-context";
+import AuthContext from "../../store/context/auth-context";
 import { authActions } from "../../store/auth-slice";
 import { expenseActions } from "../../store/expense-slice";
 import ExpenseForm from "../ExpenseTracker/ExpenseForm";
-
+import { MdModeNight } from "react-icons/md";
 import classes from "./Profile.module.css";
 import UpdateProfileForm from "./UpdateProfileForm";
+import { themeActions } from "../../store/theme-slice";
+import { BsSunFill } from "react-icons/bs";
+import axios from "axios";
 
 const Profile = (props) => {
   // const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-
+  const isDarkMode = useSelector((state) => state.theme.isDark);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const isLocation = location.pathname === "/profile";
-
+  // console.log(isDarkMode);
   const updateVisibleHandler = async () => {
     try {
       const res = await fetch(
@@ -30,7 +33,7 @@ const Profile = (props) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            idToken: auth.token
+            idToken: auth.token,
           }),
         }
       );
@@ -47,13 +50,22 @@ const Profile = (props) => {
 
   const clickLogoutHandler = () => {
     // authCtx.logout();
+    if(isDarkMode === true){
+      dispatch(themeActions.toggelTheme());
+    }
     dispatch(authActions.logout());
     dispatch(expenseActions.setItemsEmpty());
     navigate("/", { replace: true });
+    
+    
   };
 
   const clickExpenseHandler = () => {
     navigate("/profile/expense-tracker", { replace: true });
+  };
+
+  const clickModeHandler = async () => {
+    dispatch(themeActions.toggelTheme());
   };
 
   return (
@@ -70,6 +82,17 @@ const Profile = (props) => {
               Expense Tracker
             </Button>
           </div>
+          <div className={classes.mode}>
+            {auth.isPremium && (
+              <button onClick={clickModeHandler}>
+                {isDarkMode ? (
+                  <BsSunFill style={{ color: "white" }} />
+                ) : (
+                  <MdModeNight />
+                )}
+              </button>
+            )}
+          </div>
           <span className={classes.incomplete}>
             {!isLocation ? (
               "Your Profile is incomplete. "
@@ -82,7 +105,6 @@ const Profile = (props) => {
               Complete now
             </button>
           </span>
-          <div></div>
           <div>
             <Button variant="danger" onClick={clickLogoutHandler}>
               Log out

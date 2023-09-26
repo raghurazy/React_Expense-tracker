@@ -1,11 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import AuthContext from "../../store/auth-context";
 import ForgotPassForm from "./ForgotPassForm";
 import classes from "./LoginForm.module.css";
 import { authActions } from "../../store/auth-slice";
+import { themeActions } from "../../store/theme-slice";
+import axios from "axios";
 
 const LoginForm = (props) => {
   const emailInputRef = useRef();
@@ -14,6 +15,8 @@ const LoginForm = (props) => {
   // const authCtx = useContext(AuthContext);
   const [forgotVisible, setForgotVisible] = useState(false);
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
   const submitLoginHandle = async (event) => {
     event.preventDefault();
     const enteredEmail = emailInputRef.current.value;
@@ -39,9 +42,16 @@ const LoginForm = (props) => {
       if (res.ok) {
         navigate("/profile/expense-tracker", { replace: true });
         // authCtx.login(data.idToken, data.email);
-        dispatch(
-          authActions.login({ tokenId: data.idToken, email: data.email })
-        );
+        dispatch(authActions.login({ tokenId: data.idToken, email: data.email }));
+        const email = enteredEmail.replace(/[\.@]/g, "");
+          const modeRes = await axios.get(
+            `https://expense-tracker-ac87d-default-rtdb.firebaseio.com/${email}/userDetail.json`
+          );
+          if(modeRes.data){
+            dispatch(themeActions.toggelTheme());
+            dispatch(authActions.setIsPremium());
+            localStorage.setItem('isPremium', true);
+          }
       } else {
         throw Error("Authentication Failed");
       }

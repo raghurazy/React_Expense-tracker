@@ -44,11 +44,20 @@
 .expenseBtn {
   margin-left: 30rem;
 }
-
 /* .headerDetail p {
   margin-right: 100px;
 } */
-
+.mode {
+  padding: 2px;
+  display: flex;
+  align-items: flex-end;
+}
+.mode button {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: flex-end;
+}
 
 @media (max-width: 768px) {
     .proCon {
